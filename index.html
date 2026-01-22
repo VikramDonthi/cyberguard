@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>CyberGuard – Digital Trust & Safety</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --primary: #10b981;
+            --primary-glow: rgba(16, 185, 129, 0.2);
+            --secondary: #6366f1;
+            
+            /* Dark Theme Variables (Default) */
+            --bg-deep: #05080f;
+            --surface: #0d111a;
+            --surface-hover: #161c27;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.06);
+            --glass-bg: rgba(13, 17, 26, 0.7);
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            --bg-shield-opacity: 0.15;
+        }
+
+        html.light {
+            --bg-deep: #f8fafc;
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: rgba(0, 0, 0, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --card-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            --bg-shield-opacity: 0.08;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+            letter-spacing: -0.011em;
+            word-spacing: 0.02em;
+            line-height: 1.5;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.04em;
+            line-height: 1.0;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .soft-glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--border);
+            transition: background 0.3s ease, border 0.3s ease;
+        }
+
+        .guardian-gradient {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        /* 3D Ambient Background */
+        .bg-ambient-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            perspective: 1200px; /* Essential for 3D effect */
+        }
+
+        .shield-3d-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80vh;
+            height: 80vh;
+            transform-style: preserve-3d;
+            transform: translate(-50%, -50%) rotateX(10deg);
+            animation: revolve3d 20s linear infinite;
+        }
+
+        .shield-3d-face {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80vh;
+            color: var(--primary);
+            opacity: var(--bg-shield-opacity);
+            backface-visibility: visible;
+            transform-style: preserve-3d;
+        }
+
+        /* Creating depth by stacking slightly offset layers */
+        .shield-3d-face.back {
+            transform: translateZ(-20px) rotateY(180deg);
+        }
+        .shield-3d-face.front {
+            transform: translateZ(20px);
+        }
+
+        @keyframes revolve3d {
+            from { transform: translate(-50%, -50%) rotateX(10deg) rotateY(0deg); }
+            to { transform: translate(-50%, -50%) rotateX(10deg) rotateY(360deg); }
+        }
+
+        button, a {
+            min-height: 44px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            touch-action: manipulation;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+            border: 2px solid var(--bg-deep);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .pb-safe {
+            padding-bottom: var(--safe-area-inset-bottom);
+        }
+
+        #root {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react-dom": "https://esm.sh/react-dom@^19.2.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.38.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div class="bg-ambient-layer">
+        <div class="shield-3d-wrapper">
+            <div class="shield-3d-face front">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <div class="shield-3d-face back">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+        </div>
+    </div>
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
